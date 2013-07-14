@@ -1,0 +1,16 @@
+/ebin
+/doc
+/_test
+/.eunit
+/docs
+.DS_Store
+/TEST-*.xml
+*.swp
+/deps
+/log
+/logs
+/config/sunzi/compiled
+/config/sunzi/private_files
+*.beam
+*.plt
+erl_crash.dump

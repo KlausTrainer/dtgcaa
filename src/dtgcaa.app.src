@@ -1,0 +1,21 @@
+{application, dtgcaa, [
+    {description, "Does this gif contain an animation?"},
+    {vsn, "0.1.0"},
+    {modules, []},
+    {mod, {dtgcaa_app, []}},
+    {registered, []},
+    {env, []},
+    {applications, [
+        kernel,
+        stdlib,
+        crypto,
+        asn1,
+        public_key,
+        ssl,
+        ranch,
+        cowboy,
+        ibrowse,
+        sasl
+    ]}
+]}.
+

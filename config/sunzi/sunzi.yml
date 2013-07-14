@@ -1,0 +1,27 @@
+---
+# Dynamic variables here will be compiled to individual files in compiled/attributes.
+attributes:
+  tmp_path: /tmp
+  nginx_git_ref: v1.4.1
+  erlang_git_ref: OTP_R16B01
+
+# Remote recipes here will be downloaded to compiled/recipes.
+recipes:
+
+# Files specified here will be copied to compiled/files.
+files:
+  # nginx
+  - files/nginx.conf
+  - files/nginx-upstart.conf
+  # dtgcaa
+  - files/dtgcaa-upstart.conf
+
+# Fine tune how Sunzi should work.
+preferences:
+  # Erase the generated folder on the server after deploy.
+  # Turn on when you are done with testing and ready for production use.
+  erase_remote_folder: false
+
+  # Skip retrieving remote recipes when local copies already exist. This setting helps
+  # iterative deploy testing considerably faster, when you have a lot of remote recipes.
+  cache_remote_recipes: false
