@@ -34,7 +34,7 @@ provide_json(Req, undefined) ->
     {ok, _Response} = case cowboy_req:bindings(Req) of
     {[{uri, EscapedUri}], _} ->
         Uri = http_uri:decode(binary_to_list(EscapedUri)),
-        case check_gif(Uri) of
+        case contains_animation(Uri) of
         true ->
             send_response(200, <<"{\"containsananimation\":true}">>, Req);
         false ->
@@ -70,21 +70,21 @@ send_response(StatusCode, Body, Req) ->
         cowboy_req:reply(StatusCode, ResponseHeaders, JsonpBody, Req)
     end.
 
-check_gif(Uri) ->
+contains_animation(Uri) ->
     case ibrowse:send_req(Uri, [], get, <<>>, ?IBROWSE_OPTS) of
     {error, Reason} -> {error, Reason};
-    {ibrowse_req_id, ReqId} -> check_gif(ReqId, 0, <<>>, 0, 0)
+    {ibrowse_req_id, ReqId} -> contains_animation(ReqId, 0, <<>>, 0, 0)
     end.
 
-check_gif(_ReqId, 6, _Data, _Offset, _PixmapCount) ->
+contains_animation(_ReqId, 6, _Data, _Offset, _PixmapCount) ->
     {error, too_many_redirects};
-check_gif(ReqId, RedirectCount, Data0, Offset, PixmapCount) ->
+contains_animation(ReqId, RedirectCount, Data0, Offset, PixmapCount) ->
     receive
         {ibrowse_async_headers, ReqId, Status, Headers} ->
             case list_to_integer(Status) of
             200 ->
                 ok = ibrowse:stream_next(ReqId),
-                check_gif(ReqId, RedirectCount, Data0, Offset, PixmapCount);
+                contains_animation(ReqId, RedirectCount, Data0, Offset, PixmapCount);
             StatusCode when 301 =< StatusCode, StatusCode =< 303 -> % redirect
                 ok = ibrowse:stream_close(ReqId),
                 CanonicalizedHeaders = canonicalize_headers(Headers),
@@ -96,7 +96,7 @@ check_gif(ReqId, RedirectCount, Data0, Offset, PixmapCount) ->
                     {error, Reason} ->
                         {error, Reason};
                     {ibrowse_req_id, NewReqId} ->
-                        check_gif(NewReqId, RedirectCount + 1, <<>>, 0, 0)
+                        contains_animation(NewReqId, RedirectCount + 1, <<>>, 0, 0)
                     end
                 end;
             StatusCode ->
@@ -105,13 +105,13 @@ check_gif(ReqId, RedirectCount, Data0, Offset, PixmapCount) ->
             end;
         {ibrowse_async_response, ReqId, Data1} when byte_size(Data0) + byte_size(Data1) =< Offset ->
             ok = ibrowse:stream_next(ReqId),
-            check_gif(ReqId, <<Data0/binary,Data1/binary>>, RedirectCount, Offset, PixmapCount);
+            contains_animation(ReqId, <<Data0/binary,Data1/binary>>, RedirectCount, Offset, PixmapCount);
         {ibrowse_async_response, ReqId, Data1} ->
             Data2 = <<Data0/binary,Data1/binary>>,
             case dtgcaa_gif:contains_animation(Data2, Offset, PixmapCount) of
             {stream_next, Offset2, PixmapCount2} ->
                 ok = ibrowse:stream_next(ReqId),
-                check_gif(ReqId, RedirectCount, Data2, Offset2, PixmapCount2);
+                contains_animation(ReqId, RedirectCount, Data2, Offset2, PixmapCount2);
             {error, no_gif} = Error ->
                 ok = ibrowse:stream_close(ReqId),
                 Error;
