@@ -105,7 +105,7 @@ contains_animation(ReqId, RedirectCount, Data0, Offset, PixmapCount) ->
             end;
         {ibrowse_async_response, ReqId, Data1} when byte_size(Data0) + byte_size(Data1) =< Offset ->
             ok = ibrowse:stream_next(ReqId),
-            contains_animation(ReqId, <<Data0/binary,Data1/binary>>, RedirectCount, Offset, PixmapCount);
+            contains_animation(ReqId, RedirectCount, <<Data0/binary,Data1/binary>>, Offset, PixmapCount);
         {ibrowse_async_response, ReqId, Data1} ->
             Data2 = <<Data0/binary,Data1/binary>>,
             case dtgcaa_gif:contains_animation(Data2, Offset, PixmapCount) of
