@@ -3,34 +3,20 @@
 
 %% API
 -export([init/3]).
--export([allowed_methods/2]).
--export([content_types_provided/2]).
-
-%-export([provide_html/2]).
--export([provide_json/2]).
+-export([handle/2]).
+-export([terminate/3]).
 
 -define(IBROWSE_OPTS, [{response_format, binary}, {stream_to, {self(), once}}]).
 
-%% External API
+-spec init({tcp | ssl, http}, cowboy_req:req(), []) -> {ok, cowboy_req:req(), undefined}.
+init({_TransportName, http}, Req, []) ->
+	{ok, Req, undefined}.
 
--spec init({tcp | ssl, http}, cowboy_req:req(), []) -> {upgrade, protocol, cowboy_rest}.
-init({_TransportName, http}, _Req, []) ->
-	{upgrade, protocol, cowboy_rest}.
+terminate(_Reason, _Req, _State) ->
+	ok.
 
-allowed_methods(Req, State) ->
-    {[<<"GET">>], Req, State}.
-
-content_types_provided(Req, State) ->
-	{[
-%		{<<"text/html">>, provide_html},
-		{<<"application/json">>, provide_json}
-	], Req, State}.
-
-
-%% Internal API
-
--spec provide_json(cowboy_req:req(), undefined) -> {halt, cowboy_req:req(), undefined}.
-provide_json(Req, undefined) ->
+-spec handle(cowboy_req:req(), undefined) -> {ok, cowboy_req:req(), undefined}.
+handle(Req, undefined) ->
     {ok, _Response} = case cowboy_req:bindings(Req) of
     {[{uri, EscapedUri}], _} ->
         Uri = http_uri:decode(binary_to_list(EscapedUri)),
@@ -53,7 +39,7 @@ provide_json(Req, undefined) ->
     _ ->
         send_response(400, <<"{\"error\":\"bad request\"}">>, Req)
     end,
-    {halt, Req, undefined}.
+    {ok, Req, undefined}.
 
 send_response(StatusCode, Body, Req) ->
     case cowboy_req:qs_val(<<"callback">>, Req) of
