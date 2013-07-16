@@ -42,6 +42,8 @@ make -j 4 && make install
 
 # apply custom configuration
 cd $SUNZI_WORKING_DIRECTORY
+cp files/doesthisgifcontainananimation.com.pem $NGINX_CONF_DIR/
+cp files/doesthisgifcontainananimation.com.key $NGINX_CONF_DIR/
 cp files/nginx.conf $NGINX_CONF_DIR/
 cp files/nginx-upstart.conf /etc/init/nginx.conf
 

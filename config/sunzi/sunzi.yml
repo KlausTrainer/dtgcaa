@@ -13,6 +13,8 @@ files:
   # nginx
   - files/nginx.conf
   - files/nginx-upstart.conf
+  - files/doesthisgifcontainananimation.com.pem
+  - private_files/doesthisgifcontainananimation.com.key
   # dtgcaa
   - files/dtgcaa-upstart.conf
 
