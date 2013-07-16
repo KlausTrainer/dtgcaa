@@ -30,6 +30,10 @@ cp files/doesthisgifcontainananimation.com.key $CERT_DIR/server.key
 
 cp files/dtgcaa-upstart.conf /etc/init/dtgcaa.conf
 
+cp files/firewall /etc/network/if-up.d/firewall
+chmod 0755 /etc/network/if-up.d/firewall
+/etc/network/if-up.d/firewall restart
+
 if [ "$(status dtgcaa)" = "dtgcaa stop/waiting" ]; then
     start dtgcaa
 fi

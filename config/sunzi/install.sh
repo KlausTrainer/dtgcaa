@@ -17,7 +17,7 @@ aptitude -y safe-upgrade
 # Install all dependencies that we're going to need.
 # If you prefer less verbosity, use the sunzi::silencer version instead.
 DEPS="ntp git-core build-essential m4 autoconf libpcre3-dev libssl-dev \
-      libncurses5-dev libssh-dev"
+      libncurses5-dev libssh-dev iptables"
 aptitude -y install $DEPS
 
 # Install Erlang/OTP
