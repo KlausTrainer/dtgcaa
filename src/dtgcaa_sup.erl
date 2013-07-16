@@ -22,8 +22,13 @@ start_link() ->
 init([]) ->
     Processes = [
         {
-            dtgcaa_web,
-            {dtgcaa_web, start, [8080]},
+            dtgcaa_http,
+            {dtgcaa_http, start, [8000]},
+            permanent, 2000, worker, dynamic
+        },
+        {
+            dtgcaa_https,
+            {dtgcaa_https, start, [8443]},
             permanent, 2000, worker, dynamic
         }
     ],

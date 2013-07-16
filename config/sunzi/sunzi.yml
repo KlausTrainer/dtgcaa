@@ -2,7 +2,6 @@
 # Dynamic variables here will be compiled to individual files in compiled/attributes.
 attributes:
   tmp_path: /tmp
-  nginx_git_ref: v1.4.1
   erlang_git_ref: OTP_R16B01
 
 # Remote recipes here will be downloaded to compiled/recipes.
@@ -10,13 +9,11 @@ recipes:
 
 # Files specified here will be copied to compiled/files.
 files:
-  # nginx
-  - files/nginx.conf
-  - files/nginx-upstart.conf
-  - files/doesthisgifcontainananimation.com.pem
-  - private_files/doesthisgifcontainananimation.com.key
   # dtgcaa
   - files/dtgcaa-upstart.conf
+  - files/ca.crt
+  - files/doesthisgifcontainananimation.com.crt
+  - private_files/doesthisgifcontainananimation.com.key
 
 # Fine tune how Sunzi should work.
 preferences:

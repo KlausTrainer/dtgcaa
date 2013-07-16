@@ -20,11 +20,8 @@ DEPS="ntp git-core build-essential m4 autoconf libpcre3-dev libssl-dev \
       libncurses5-dev libssh-dev"
 aptitude -y install $DEPS
 
-# Install nginx
-source recipes/nginx.sh $(cat attributes/tmp_path) $(cat attributes/nginx_git_ref)
-
 # Install Erlang/OTP
 # source recipes/erlang.sh $(cat attributes/tmp_path) $(cat attributes/erlang_git_ref)
 
 # Install dtgcaa
-# source recipes/dtgcaa.sh $(cat attributes/tmp_path)
+source recipes/dtgcaa.sh $(cat attributes/tmp_path)

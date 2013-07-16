@@ -8,6 +8,13 @@
 
 -define(IBROWSE_OPTS, [{response_format, binary}, {stream_to, {self(), once}}]).
 
+-define(HEADERS, [
+    {<<"strict-transport-security">>, <<"max-age=315360000">>},
+    {<<"access-control-allow-origin">>, <<"*">>},
+    {<<"access-control-allow-methods">>, <<"GET, PUT, POST, OPTIONS">>},
+    {<<"access-control-max-age">>, <<"86400">>}
+]).
+
 -spec init({tcp | ssl, http}, cowboy_req:req(), []) -> {ok, cowboy_req:req(), undefined}.
 init({_TransportName, http}, Req, []) ->
 	{ok, Req, undefined}.
@@ -46,11 +53,13 @@ send_response(StatusCode, Body, Req) ->
     {Value, _} when Value =:= undefined; Value =:= true->
         ResponseHeaders = [
             {<<"content-type">>, <<"application/json; charset=utf-8">>}
+            | ?HEADERS
         ],
         cowboy_req:reply(StatusCode, ResponseHeaders, Body, Req);
     {Value, _} when is_binary(Value) ->
         ResponseHeaders = [
             {<<"content-type">>, <<"application/json-p; charset=utf-8">>}
+            | ?HEADERS
         ],
         JsonpBody = <<Value/binary,"(",Body/binary,");">>,
         cowboy_req:reply(StatusCode, ResponseHeaders, JsonpBody, Req)
