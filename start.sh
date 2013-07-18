@@ -1,4 +1,5 @@
 #!/bin/sh
 cd `dirname $0`
 
-exec erl -heart -detached -pa $(pwd)/ebin $(pwd)/deps/*/ebin -s dtgcaa
+export HEART_COMMAND="./start.sh"
+exec erl -heart -detached -pa $(pwd)/ebin $(find $(pwd)/deps -type d -name ebin | xargs) -s dtgcaa
