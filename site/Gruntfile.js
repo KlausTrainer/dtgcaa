@@ -119,7 +119,9 @@ module.exports = function (grunt) {
                 relativeAssets: true
             },
             dist: {
-                options: {outputStyle: 'compressed'}
+                options: {
+                    noLineComments: true
+                }
             },
             server: {
                 options: {
