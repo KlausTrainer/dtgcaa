@@ -118,7 +118,9 @@ module.exports = function (grunt) {
                 importPath: '<%= folders.app %>/bower_components',
                 relativeAssets: true
             },
-            dist: {},
+            dist: {
+                options: {outputStyle: 'compressed'}
+            },
             server: {
                 options: {
                     debugInfo: true
