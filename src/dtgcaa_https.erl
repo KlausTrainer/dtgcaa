@@ -11,7 +11,7 @@ start(Port) ->
             {"/", cowboy_static, [
                 {directory, PrivDir ++ "/www"},
                 {file, <<"index.html">>},
-                {mimetypes, [{<<".html">>, [<<"*/*">>]}]}
+                {mimetypes, [{<<".html">>, [<<"text/html">>]}]}
             ]},
             {"/:uri", dtgcaa_handler, []}
         ]}
