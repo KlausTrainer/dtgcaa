@@ -8,6 +8,11 @@ start(Port) ->
     PrivDir = code:priv_dir(dtgcaa),
     Dispatch = cowboy_router:compile([
         {'_', [
+            {"/", cowboy_static, [
+                {directory, PrivDir ++ "/www"},
+                {file, <<"index.html">>},
+                {mimetypes, [{<<".html">>, [<<"*/*">>]}]}
+            ]},
             {"/:uri", dtgcaa_handler, []}
         ]}
     ]),
