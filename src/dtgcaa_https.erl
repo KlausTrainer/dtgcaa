@@ -10,7 +10,8 @@ start(Port) ->
         {'_', [
             {"/", cowboy_static, [
                 {directory, PrivDir ++ "/www"},
-                {file, <<"index.html">>}
+                {file, <<"index.html">>},
+                {mimetypes, [{<<".html">>, [<<"*/*">>]}]}
             ]},
             {"/:uri", dtgcaa_handler, []}
         ]}
