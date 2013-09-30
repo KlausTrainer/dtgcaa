@@ -9,7 +9,7 @@ SUNZI_WORKING_DIRECTORY="$(pwd)"
 
 cd $TMP_PATH
 rm -rf otp
-git clone -n --depth=1 https://github.com/erlang/otp.git
+git clone -n https://github.com/erlang/otp.git
 cd otp
 git checkout -q $ERLANG_GIT_REF
 
