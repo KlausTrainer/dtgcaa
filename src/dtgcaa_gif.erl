@@ -68,7 +68,9 @@ contains_animation(Data, Offset, PixmapCount) ->
             end
         end;
     <<_:Offset/binary,?TRAILER,_/binary>> ->
-        {ok, false}
+        {ok, false};
+    <<_:Offset/binary,_/binary>> ->
+        contains_animation(Data, Offset + 1, PixmapCount)
     end.
 
 
