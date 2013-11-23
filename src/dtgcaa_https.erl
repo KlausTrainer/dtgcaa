@@ -12,6 +12,10 @@ start(Port) ->
                 {file, PrivDir ++ "/www/index.html", [{mimetypes,
                     {<<"text">>, <<"html">>, []}}]}
             },
+            {"/favicon.gif", cowboy_static,
+                {file, PrivDir ++ "/www/favicon.gif", [{mimetypes,
+                    {<<"image">>, <<"gif">>, []}}]}
+            },
             {"/:uri", dtgcaa_handler, []}
         ]}
     ]),
