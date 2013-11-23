@@ -10,6 +10,7 @@ start() ->
     ok = application:start(ssl),
     ok = application:start(ibrowse),
     ok = application:start(ranch),
+    ok = application:start(cowlib),
     ok = application:start(cowboy),
     ok = application:start(sasl),
     ok = application:start(dtgcaa).

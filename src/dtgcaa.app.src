@@ -13,6 +13,7 @@
         public_key,
         ssl,
         ranch,
+        cowlib,
         cowboy,
         ibrowse,
         sasl
