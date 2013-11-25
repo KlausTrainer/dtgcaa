@@ -31,9 +31,12 @@ contains_animation(Data, _Offset = 0, PixmapCount) ->
 contains_animation(Data, Offset = 6, PixmapCount) when byte_size(Data) - Offset < 7->
     {stream_next, Offset, PixmapCount};
 contains_animation(Data, Offset = 6, PixmapCount) ->
-    <<_:Offset/binary,_Width:16/little,_Height:16/little,_Map:1,_Cr:3,
+    <<_:Offset/binary,_Width:16/little,_Height:16/little,Map:1,_Cr:3,
       _Sort:1,Pix:3,_Background:8,_AspectRatio:8,_/binary>> = Data,
-    PaletteSize = (1 bsl (Pix + 1)) * 3,
+    PaletteSize = case Map of
+    0 -> 0;
+    1 -> (1 bsl (Pix + 1)) * 3
+    end,
     contains_animation(Data, Offset + 7 + PaletteSize, PixmapCount);
 contains_animation(Data, Offset, PixmapCount) when byte_size(Data) - Offset < 1 ->
     {stream_next, Offset, PixmapCount};
