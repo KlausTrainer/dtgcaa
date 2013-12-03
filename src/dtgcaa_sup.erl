@@ -23,12 +23,7 @@ init([]) ->
     Processes = [
         {
             dtgcaa_http,
-            {dtgcaa_http, start, [8000]},
-            permanent, 2000, worker, dynamic
-        },
-        {
-            dtgcaa_https,
-            {dtgcaa_https, start, [8443]},
+            {dtgcaa_http, start, []},
             permanent, 2000, worker, dynamic
         }
     ],

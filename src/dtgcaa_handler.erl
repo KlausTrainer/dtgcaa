@@ -6,7 +6,12 @@
 -export([handle/2]).
 -export([terminate/3]).
 
--define(IBROWSE_OPTS, [{response_format, binary}, {stream_to, {self(), once}}]).
+-define(IBROWSE_OPTS, [
+    {response_format, binary},
+    {max_sessions, 1024},
+    {max_pipeline_size, 1024},
+    {stream_to, {self(), once}}
+]).
 
 -define(HEADERS, [
     {<<"strict-transport-security">>, <<"max-age=315360000">>},
@@ -15,19 +20,20 @@
     {<<"access-control-max-age">>, <<"86400">>}
 ]).
 
--spec init({tcp | ssl, http}, cowboy_req:req(), []) -> {ok, cowboy_req:req(), undefined}.
-init({_TransportName, http}, Req, []) ->
-	{ok, Req, undefined}.
+-spec init({tcp | ssl, http}, cowboy_req:req(), string()) ->
+    {ok, cowboy_req:req(), string()}.
+init({_TransportName, http}, Req, CouchUri) ->
+	{ok, Req, CouchUri}.
 
-terminate(_Reason, _Req, _State) ->
+terminate(_Reason, _Req, _CouchUri) ->
 	ok.
 
--spec handle(cowboy_req:req(), undefined) -> {ok, cowboy_req:req(), undefined}.
-handle(Req, undefined) ->
+-spec handle(cowboy_req:req(), string()) -> {ok, cowboy_req:req(), string()}.
+handle(Req, CouchUri) ->
     {ok, _Response} = case cowboy_req:bindings(Req) of
-    {[{uri, EscapedUri}], _} ->
-        Uri = http_uri:decode(binary_to_list(EscapedUri)),
-        case contains_animation(Uri) of
+    {[{uri, EscapedPath}], _} ->
+        Path = http_uri:decode(binary_to_list(EscapedPath)),
+        case contains_animation(lists:flatten(CouchUri ++ Path)) of
         true ->
             send_response(200, <<"{\"containsananimation\":true}">>, Req);
         false ->
@@ -46,7 +52,7 @@ handle(Req, undefined) ->
     _ ->
         send_response(400, <<"{\"error\":\"bad request\"}">>, Req)
     end,
-    {ok, Req, undefined}.
+    {ok, Req, CouchUri}.
 
 send_response(StatusCode, Body, Req) ->
     case cowboy_req:qs_val(<<"callback">>, Req) of
